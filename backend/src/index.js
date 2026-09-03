@@ -36,7 +36,8 @@ app.use(cors({
 
     return callback(new Error(`CORS blocked: Origin ${origin} not allowed`));
   },
-  credentials: true
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-user-uuid']
 }));
 
 app.use(express.json());

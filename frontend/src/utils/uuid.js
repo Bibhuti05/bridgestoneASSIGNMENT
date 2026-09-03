@@ -1,26 +1,11 @@
-/**
- * UUID utility module.
- *
- * Manages a persistent user UUID stored in a cookie and provides a helper to
- * register/identify the user with the backend on application startup.
- */
-
+const STORAGE_KEY = "user_uuid";
 const COOKIE_NAME = "user_uuid";
-const COOKIE_MAX_AGE = 60 * 60 * 24 * 365; // 365 days in seconds
+const COOKIE_MAX_AGE = 60 * 60 * 24 * 365; // 365 days
 const COOKIE_PATH = "/";
 
-/**
- * Parse all document cookies and return them as a plain object keyed by cookie
- * name.
- *
- * @returns {Record<string, string>}
- */
 function parseCookies() {
   const cookies = {};
-
-  if (!document?.cookie) {
-    return cookies;
-  }
+  if (typeof document === "undefined" || !document.cookie) return cookies;
 
   document.cookie.split(";").forEach((entry) => {
     const [name, ...rest] = entry.split("=");
@@ -29,59 +14,55 @@ function parseCookies() {
       cookies[trimmedName] = decodeURIComponent(rest.join("="));
     }
   });
-
   return cookies;
 }
 
-/**
- * Retrieve the user UUID from the cookie jar.
- *
- * @returns {string | undefined}
- */
 function getCookieUUID() {
   return parseCookies()[COOKIE_NAME];
 }
 
-/**
- * Set a cookie with the given name, value, max-age, and path.
- *
- * @param {string} name
- * @param {string} value
- * @param {number} maxAge - seconds until the cookie expires
- * @param {string} path
- */
 function setCookie(name, value, maxAge, path) {
-  document.cookie = `${name}=${encodeURIComponent(value)}; max-age=${maxAge}; path=${path}`;
+  if (typeof document === "undefined") return;
+  document.cookie = `${name}=${encodeURIComponent(value)}; max-age=${maxAge}; path=${path}; SameSite=Lax`;
 }
 
-/**
- * Return the current user UUID. If no UUID cookie exists yet a new one is
- * generated with `crypto.randomUUID()` and persisted as a cookie before being
- * returned.
- *
- * @returns {string} The user UUID
- */
 export function getUserId() {
-  let uuid = getCookieUUID();
+  let uuid = null;
 
-  if (!uuid) {
-    uuid = crypto.randomUUID();
-    setCookie(COOKIE_NAME, uuid, COOKIE_MAX_AGE, COOKIE_PATH);
+  // 1. Primary: read from localStorage
+  if (typeof window !== "undefined" && window.localStorage) {
+    try {
+      uuid = window.localStorage.getItem(STORAGE_KEY);
+    } catch {}
   }
+
+  // 2. Fallback: check cookie if not in localStorage
+  if (!uuid) {
+    uuid = getCookieUUID();
+  }
+
+  // 3. If still absent, generate new UUID
+  if (!uuid) {
+    uuid = typeof crypto !== "undefined" && crypto.randomUUID
+      ? crypto.randomUUID()
+      : `usr-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+  }
+
+  // Persist to localStorage (primary) and cookie (secondary)
+  if (typeof window !== "undefined" && window.localStorage) {
+    try {
+      window.localStorage.setItem(STORAGE_KEY, uuid);
+    } catch {}
+  }
+  setCookie(COOKIE_NAME, uuid, COOKIE_MAX_AGE, COOKIE_PATH);
 
   return uuid;
 }
 
-/**
- * Ensure a user UUID exists and register/identify the user with the backend.
- *
- * 1. Reads the UUID from the cookie (generating one if absent).
- *
- */
 const DEFAULT_API_URL = (
   import.meta.env.VITE_API_URL ||
-  (import.meta.env.DEV ? 'http://localhost:3001/api' : '/api')
-).replace(/\/+$/, '');
+  (import.meta.env.DEV ? "http://localhost:3001/api" : "/api")
+).replace(/\/+$/, "");
 
 export async function initUser(baseUrl = DEFAULT_API_URL) {
   const uuid = getUserId();
@@ -89,7 +70,10 @@ export async function initUser(baseUrl = DEFAULT_API_URL) {
   try {
     const response = await fetch(`${baseUrl}/user`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "x-user-uuid": uuid,
+      },
       credentials: "include",
       body: JSON.stringify({ uuid }),
     });

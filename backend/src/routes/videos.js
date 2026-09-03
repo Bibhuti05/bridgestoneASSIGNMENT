@@ -8,7 +8,6 @@ const __dirname = dirname(__filename);
 
 const router = express.Router();
 
-// Helper to read/write JSON files
 const dataDir = join(__dirname, '..', '..', 'data');
 
 const readJSON = (filename) => {
@@ -21,11 +20,22 @@ const writeJSON = (filename, data) => {
   writeFileSync(filePath, JSON.stringify(data, null, 2));
 };
 
+// Helper to extract user UUID from header, cookie, or body
+const getUserUuid = (req) => {
+  return (
+    req.headers['x-user-uuid'] ||
+    req.cookies?.user_uuid ||
+    req.body?.userUuid ||
+    req.body?.uuid ||
+    null
+  );
+};
+
 // POST /api/user - Register/identify user with UUID
 router.post('/user', (req, res) => {
   try {
-    const { uuid } = req.body;
-    
+    const uuid = getUserUuid(req) || req.body?.uuid;
+
     if (!uuid) {
       return res.status(400).json({ error: 'UUID is required' });
     }
@@ -34,13 +44,11 @@ router.post('/user', (req, res) => {
     const existingUser = users.find(u => u.uuid === uuid);
 
     if (existingUser) {
-      // Update last active
       existingUser.lastActive = new Date().toISOString();
       writeJSON('users.json', users);
       return res.json({ message: 'User updated', user: existingUser });
     }
 
-    // Create new user
     const newUser = {
       uuid,
       createdAt: new Date().toISOString(),
@@ -61,11 +69,8 @@ router.post('/user', (req, res) => {
 router.get('/videos', (req, res) => {
   try {
     const videos = readJSON('videos.json');
-    
-    // Get user UUID from cookie if available
-    const userUuid = req.cookies?.user_uuid;
+    const userUuid = getUserUuid(req);
 
-    // If user exists, mark which videos they've liked
     if (userUuid) {
       const videosWithUserLikes = videos.map(video => ({
         ...video,
@@ -85,7 +90,7 @@ router.get('/videos', (req, res) => {
 router.post('/like', (req, res) => {
   try {
     const { videoId } = req.body;
-    const userUuid = req.cookies?.user_uuid;
+    const userUuid = getUserUuid(req);
 
     if (!userUuid) {
       return res.status(401).json({ error: 'User not identified' });
@@ -106,11 +111,9 @@ router.post('/like', (req, res) => {
     const userLikeIndex = video.likedBy.indexOf(userUuid);
 
     if (userLikeIndex === -1) {
-      // Like the video
       video.likedBy.push(userUuid);
       video.likes += 1;
     } else {
-      // Unlike the video
       video.likedBy.splice(userLikeIndex, 1);
       video.likes -= 1;
     }
@@ -132,7 +135,7 @@ router.post('/like', (req, res) => {
 router.post('/share', (req, res) => {
   try {
     const { videoId, platform } = req.body;
-    const userUuid = req.cookies?.user_uuid;
+    const userUuid = getUserUuid(req);
 
     if (!userUuid) {
       return res.status(401).json({ error: 'User not identified' });

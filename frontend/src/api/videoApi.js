@@ -1,15 +1,20 @@
+import { getUserId } from "../utils/uuid";
+
 export const BASE_URL = (
   import.meta.env.VITE_API_URL ||
-  (import.meta.env.DEV ? 'http://localhost:3001/api' : '/api')
-).replace(/\/+$/, '');
+  (import.meta.env.DEV ? "http://localhost:3001/api" : "/api")
+).replace(/\/+$/, "");
 
 async function request(endpoint, options = {}) {
   const url = `${BASE_URL}${endpoint}`;
+  const userUuid = getUserId();
 
   const config = {
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
+      "x-user-uuid": userUuid,
+      ...(options.headers || {}),
     },
     ...options,
   };
