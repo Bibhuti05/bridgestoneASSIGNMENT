@@ -76,13 +76,14 @@ export function getUserId() {
  * Ensure a user UUID exists and register/identify the user with the backend.
  *
  * 1. Reads the UUID from the cookie (generating one if absent).
- * 2. POSTs the UUID to `POST /api/user` so the backend can register or
- *    identify the user.
  *
- * @param {string} [baseUrl="http://localhost:3001/api"] - Backend base URL
- * @returns {Promise<{ message: string, user: object }>} Backend response
  */
-export async function initUser(baseUrl = "http://localhost:3001/api") {
+const DEFAULT_API_URL = (
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.DEV ? 'http://localhost:3001/api' : '/api')
+).replace(/\/+$/, '');
+
+export async function initUser(baseUrl = DEFAULT_API_URL) {
   const uuid = getUserId();
 
   try {

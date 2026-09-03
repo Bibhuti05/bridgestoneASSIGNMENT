@@ -3,26 +3,51 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import videosRouter from './routes/videos.js';
 
-const app = express();
-const PORT = 3001;
+if (typeof process.loadEnvFile === 'function') {
+  try {
+    process.loadEnvFile();
+  } catch {}
+}
 
-// Middleware
+const app = express();
+const PORT = parseInt(process.env.PORT || '3001', 10);
+
+const configuredOrigins = (process.env.ALLOWED_ORIGINS || process.env.FRONTEND_URL || '')
+  .split(',')
+  .map(url => url.trim().replace(/\/+$/, ''))
+  .filter(Boolean);
+
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+
+    const normalizedOrigin = origin.replace(/\/+$/, '');
+
+    if (configuredOrigins.includes(normalizedOrigin) || configuredOrigins.includes('*')) {
+      return callback(null, true);
+    }
+
+    if (
+      process.env.NODE_ENV !== 'production' &&
+      (/^https?:\/\/localhost(:\d+)?$/.test(normalizedOrigin) || /^https?:\/\/127\.0\.0\.1(:\d+)?$/.test(normalizedOrigin))
+    ) {
+      return callback(null, true);
+    }
+
+    return callback(new Error(`CORS blocked: Origin ${origin} not allowed`));
+  },
   credentials: true
 }));
+
 app.use(express.json());
 app.use(cookieParser());
 
-// Routes
 app.use('/api', videosRouter);
 
-// Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// Start server
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
