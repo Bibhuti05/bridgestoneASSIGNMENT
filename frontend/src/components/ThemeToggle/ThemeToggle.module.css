@@ -1,0 +1,35 @@
+/* ============================================================
+   ThemeToggle — zinc pill
+   ============================================================ */
+.toggle {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  background: var(--toggle-bg);
+  color: var(--toggle-fg);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 6px var(--shadow-color);
+  transition: background 0.25s, border-color 0.25s, transform 0.2s, box-shadow 0.2s;
+  z-index: 200;
+}
+
+.toggle:hover {
+  transform: scale(1.08);
+  box-shadow: 0 4px 14px var(--shadow-color);
+  border-color: var(--text-muted);
+}
+
+.icon {
+  transition: transform 0.35s ease;
+}
+
+.toggle:hover .icon {
+  transform: rotate(20deg);
+}

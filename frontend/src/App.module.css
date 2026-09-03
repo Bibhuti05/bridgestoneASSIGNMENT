@@ -1,0 +1,121 @@
+/* ============================================================
+   App shell — zinc layout
+   ============================================================ */
+.app {
+  min-height: 100vh;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* ── Loading ── */
+.appLoading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 20px;
+  background: var(--bg-primary);
+}
+
+.appLoading p {
+  color: var(--text-secondary);
+  font-size: 14px;
+  letter-spacing: 0.04em;
+}
+
+/* ── Error ── */
+.appError {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 16px;
+  text-align: center;
+  background: var(--bg-primary);
+  padding: 24px;
+}
+
+.appError h2 {
+  color: var(--error-color);
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.appError p {
+  color: var(--text-secondary);
+  margin: 0;
+  font-size: 14px;
+}
+
+/* Retry button — solid zinc-50 on dark / zinc-950 on light */
+.appError button {
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  border: none;
+  padding: 10px 28px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  transition: opacity 0.2s;
+}
+
+.appError button:hover {
+  opacity: 0.85;
+}
+
+/* ── Header ── */
+.appHeader {
+  text-align: center;
+  padding: 56px 20px 28px;
+}
+
+.appHeader h1 {
+  font-size: 38px;
+  font-weight: 800;
+  margin: 0 0 8px 0;
+  color: var(--text-primary);
+  letter-spacing: -1px;
+  line-height: 1.1;
+}
+
+/* Thin zinc-400 / zinc-600 subtitle */
+.appHeader p {
+  color: var(--text-secondary);
+  font-size: 13px;
+  margin: 0;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* ── Main / sections ── */
+.appMain {
+  padding: 8px 0 48px;
+}
+
+.carouselSection {
+  margin-bottom: 40px;
+}
+
+.carouselSection h2 {
+  font-size: 11px;
+  font-weight: 700;
+  margin: 0 0 14px 28px;
+  color: var(--text-muted);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .appHeader       { padding: 40px 16px 20px; }
+  .appHeader h1    { font-size: 28px; }
+  .appMain         { padding: 4px 0 24px; }
+  .carouselSection h2 { font-size: 10px; margin: 0 0 10px 16px; }
+}

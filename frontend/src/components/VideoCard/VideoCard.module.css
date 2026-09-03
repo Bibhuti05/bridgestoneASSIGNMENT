@@ -1,0 +1,95 @@
+.container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--bg-tertiary);        /* zinc-800 */
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.containerInactive {
+  pointer-events: none;
+}
+
+.video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── Gradient overlay ── */
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  /* Deep zinc-950 fade at bottom for control contrast */
+  background: linear-gradient(
+    to bottom,
+    transparent 25%,
+    rgba(9, 9, 11, 0.25) 55%,
+    rgba(9, 9, 11, 0.82) 100%
+  );
+  pointer-events: none;
+}
+
+/* ── Action buttons (like + share) — center-right ── */
+.actions {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: auto;
+}
+
+/* ── Controls ── */
+.controls {
+  pointer-events: auto;
+  padding-bottom: 2px;
+}
+
+/* ── Title ── */
+.title {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 52px;
+  color: #fafafa;
+  font-size: 12px;
+  font-weight: 700;
+  text-shadow: 0 1px 4px rgba(9, 9, 11, 0.8);
+  pointer-events: none;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+}
+
+/* ── Loading ── */
+.loadingContainer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(9, 9, 11, 0.35);
+}
+
+/* ── "Tap to view" hint ── */
+.tapHint {
+  margin: 0 10px 10px;
+  padding: 5px 12px;
+  color: rgba(250, 250, 250, 0.75);
+  font-size: 10px;
+  font-weight: 600;
+  text-align: center;
+  background: rgba(9, 9, 11, 0.60);
+  border-radius: 20px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  backdrop-filter: blur(4px);
+}

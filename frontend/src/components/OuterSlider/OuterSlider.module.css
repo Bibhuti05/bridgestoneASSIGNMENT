@@ -1,0 +1,190 @@
+/* ============================================================
+   OuterSlider — zinc card strip
+   ============================================================ */
+.container {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.scrollContainer {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 12px 64px 20px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollContainer::-webkit-scrollbar { display: none; }
+
+/* ── Card ── */
+.card {
+  flex-shrink: 0;
+  width: 152px;
+  scroll-snap-align: start;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  outline: none;
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.22s ease,
+              border-color 0.22s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 12px 32px var(--shadow-color);
+  border-color: var(--text-muted);
+}
+
+.card:focus-visible {
+  border-color: var(--text-primary);
+  box-shadow: 0 0 0 2px var(--text-primary);
+}
+
+/* ── Thumbnail ── */
+.thumbnailWrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  overflow: hidden;
+  background: var(--bg-tertiary);
+}
+
+.thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.35s ease;
+}
+
+.card:hover .thumbnail {
+  transform: scale(1.05);
+}
+
+/* Hover play overlay */
+.hoverOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(9, 9, 11, 0.45);   /* zinc-950 @ 45% */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.22s ease;
+}
+
+.card:hover .hoverOverlay {
+  opacity: 1;
+}
+
+/* Play button — zinc-50 circle */
+.playIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--arrow-bg);           /* zinc-50 dark / zinc-950 light */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s;
+}
+
+.playIcon svg {
+  color: var(--arrow-fg);               /* zinc-950 dark / zinc-50 light */
+  margin-left: 3px; /* optical center for play triangle */
+}
+
+.card:hover .playIcon {
+  transform: scale(1.1);
+}
+
+/* Rank badge — zinc-800 pill */
+.rank {
+  position: absolute;
+  top: 7px;
+  left: 7px;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 20px;
+  letter-spacing: 0.06em;
+  border: 1px solid var(--border-color);
+}
+
+/* ── Info strip ── */
+.cardInfo {
+  padding: 8px 10px 10px;
+  background: var(--card-bg);
+}
+
+.cardTitle {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4px;
+  letter-spacing: 0.01em;
+}
+
+.cardMeta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.heartIcon {
+  color: var(--like-active); /* rose-500 */
+  flex-shrink: 0;
+}
+
+/* ── Arrows — solid zinc contrast ── */
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--arrow-bg);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  color: var(--arrow-fg);
+  box-shadow: 0 2px 10px var(--shadow-color);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.arrow:hover {
+  background: var(--arrow-hover-bg);
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 5px 18px var(--shadow-color);
+}
+
+.arrowLeft  { left: 14px; }
+.arrowRight { right: 14px; }
+
+/* ── Empty state ── */
+.emptyState {
+  text-align: center;
+  padding: 60px 40px;
+  color: var(--text-muted);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+}

@@ -1,0 +1,167 @@
+/* ============================================================
+   Zinc Design System
+   Dark:  zinc-950 bg → zinc-900 surface → zinc-800 card → zinc-700 border
+          zinc-100 primary text → zinc-400 secondary → zinc-600 muted
+   Light: zinc-50 bg → zinc-100 surface → zinc-200 card → zinc-300 border
+          zinc-900 primary text → zinc-600 secondary → zinc-400 muted
+   Accent: zinc-50/zinc-950 for high contrast; rose-500 (#f43f5e) for liked/active
+   ============================================================ */
+
+/* ---------- Dark (default) ---------- */
+:root,
+[data-theme="dark"] {
+  /* Backgrounds */
+  --bg-primary:   #09090b;   /* zinc-950 */
+  --bg-secondary: #18181b;   /* zinc-900 */
+  --bg-tertiary:  #27272a;   /* zinc-800 */
+
+  /* Text */
+  --text-primary:   #fafafa; /* zinc-50  */
+  --text-secondary: #a1a1aa; /* zinc-400 */
+  --text-muted:     #52525b; /* zinc-600 */
+
+  /* Cards / surfaces */
+  --card-bg:      #18181b;   /* zinc-900 */
+  --dropdown-bg:  #27272a;   /* zinc-800 */
+
+  /* Borders */
+  --border-color: #3f3f46;   /* zinc-700 */
+  --shadow-color: rgba(0, 0, 0, 0.55);
+
+  /* Interactive states */
+  --hover-bg:       rgba(255, 255, 255, 0.06);
+  --active-bg:      rgba(255, 255, 255, 0.10);
+
+  /* Navigation arrows — white pill on dark */
+  --arrow-bg:       #fafafa;
+  --arrow-fg:       #09090b;
+  --arrow-hover-bg: #e4e4e7;
+
+  /* Theme toggle */
+  --toggle-bg:    #27272a;   /* zinc-800 */
+  --toggle-fg:    #fafafa;   /* zinc-50  */
+
+  /* Like & accent */
+  --like-color:   #a1a1aa;   /* zinc-400 */
+  --like-active:  #f43f5e;   /* rose-500 */
+
+  /* Progress bar */
+  --progress-bg:    rgba(255, 255, 255, 0.15);
+  --progress-color: #fafafa; /* zinc-50 — high contrast white bar */
+
+  /* Control buttons (play/mute on video) */
+  --ctrl-bg:      rgba(9, 9, 11, 0.70);   /* zinc-950 @ 70% */
+  --ctrl-fg:      #fafafa;
+  --ctrl-hover:   rgba(9, 9, 11, 0.90);
+
+  /* Generic accent (used for dots, title gradient) */
+  --accent-color:     #fafafa; /* zinc-50 */
+  --accent-secondary: #a1a1aa; /* zinc-400 */
+  --accent-dot:       #fafafa;
+
+  /* Error / success */
+  --error-color: #f43f5e;
+  --error-hover: #e11d48;
+  --success-color: #22c55e;
+
+  /* Modal */
+  --modal-overlay: rgba(9, 9, 11, 0.88);
+
+  /* Spinner */
+  --spinner-border: rgba(255, 255, 255, 0.12);
+  --spinner-color:  #fafafa;
+}
+
+/* ---------- Light ---------- */
+[data-theme="light"] {
+  --bg-primary:   #fafafa;   /* zinc-50  */
+  --bg-secondary: #f4f4f5;   /* zinc-100 */
+  --bg-tertiary:  #e4e4e7;   /* zinc-200 */
+
+  --text-primary:   #09090b; /* zinc-950 */
+  --text-secondary: #52525b; /* zinc-600 */
+  --text-muted:     #a1a1aa; /* zinc-400 */
+
+  --card-bg:     #ffffff;
+  --dropdown-bg: #ffffff;
+
+  --border-color: #d4d4d8;   /* zinc-300 */
+  --shadow-color: rgba(0, 0, 0, 0.10);
+
+  --hover-bg:    rgba(0, 0, 0, 0.04);
+  --active-bg:   rgba(0, 0, 0, 0.08);
+
+  --arrow-bg:       #09090b; /* zinc-950 — dark arrow on light bg */
+  --arrow-fg:       #fafafa;
+  --arrow-hover-bg: #27272a;
+
+  --toggle-bg:  #e4e4e7;     /* zinc-200 */
+  --toggle-fg:  #09090b;     /* zinc-950 */
+
+  --like-color:  #71717a;    /* zinc-500 */
+  --like-active: #f43f5e;
+
+  --progress-bg:    rgba(0, 0, 0, 0.12);
+  --progress-color: #09090b; /* zinc-950 — dark bar on light bg */
+
+  --ctrl-bg:    rgba(9, 9, 11, 0.65);
+  --ctrl-fg:    #fafafa;
+  --ctrl-hover: rgba(9, 9, 11, 0.85);
+
+  --accent-color:     #09090b; /* zinc-950 */
+  --accent-secondary: #52525b;
+  --accent-dot:       #09090b;
+
+  --error-color: #f43f5e;
+  --error-hover: #e11d48;
+  --success-color: #16a34a;
+
+  --modal-overlay: rgba(0, 0, 0, 0.65);
+
+  --spinner-border: rgba(0, 0, 0, 0.10);
+  --spinner-color:  #09090b;
+}
+
+/* ============================================================
+   Global resets & base
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* ============================================================
+   Scrollbars (zinc-tinted)
+   ============================================================ */
+::-webkit-scrollbar        { width: 6px; height: 6px; }
+::-webkit-scrollbar-track  { background: var(--bg-secondary); }
+::-webkit-scrollbar-thumb  { background: var(--border-color); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ============================================================
+   Focus & selection
+   ============================================================ */
+button:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: rgba(161, 161, 170, 0.3); /* zinc-400 @ 30% */
+  color: var(--text-primary);
+}
